@@ -1,0 +1,34 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-load-balancer
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - web1-nodejs
+      - web2-nodejs
+
+
+  web1-nodejs:
+    build:
+      context: ./web1
+      dockerfile: Dockerfile
+    image: node:14
+    container_name: web1-nodejs
+    command: ["npm" ,"start"]
+    ports:
+      - "3003:80"
+
+  web2-nodejs:
+    build:
+      context: ./web2 
+      dockerfile: Dockerfile
+    image: node:14
+    container_name: web2-nodejs
+    command: ["npm" ,"start"]
+    ports:
+      - "3001:80"
+
